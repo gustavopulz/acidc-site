@@ -26,7 +26,7 @@ export default function Media() {
         </div>
       </Section>
 
-      <Section title="Setlist (amostra)">
+      <Section title="Setlist">
         <ul className="grid gap-2 list-disc pl-6 text-white/80">
           <li>1. Back in Black</li>
           <li>2. Rock N' Roll Train</li>
