@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   getAlbumsSortedDesc,
   getAlbumCoverImagesFromPhotos,
 } from "../data/gallery";
+import ImageLightbox from "./ImageLightbox";
 
 const slides = getAlbumsSortedDesc();
 
@@ -11,6 +12,13 @@ export default function GallerySlider() {
   const [index, setIndex] = useState(0);
   const total = slides.length;
   const current = slides[index];
+  const covers = useMemo(
+    () => getAlbumCoverImagesFromPhotos(current.photos, 5),
+    [current]
+  );
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const prev = () => setIndex((i) => Math.max(0, i - 1));
   const next = () => setIndex((i) => Math.min(total - 1, i + 1));
@@ -26,18 +34,24 @@ export default function GallerySlider() {
       {/* slide content */}
       <div className="relative">
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {getAlbumCoverImagesFromPhotos(current.photos, 5).map((src, i) => (
-            <figure
+          {covers.map((src, i) => (
+            <button
+              type="button"
               key={i}
-              className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/5"
+              onClick={() => {
+                setLightboxIndex(i);
+                setLightboxOpen(true);
+              }}
+              className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/5 group"
+              aria-label={`Ampliar ${current.title} foto ${i + 1}`}
             >
               <img
                 src={src}
                 alt={`${current.title} foto ${i + 1}`}
-                className="h-full w-full object-cover hover:scale-[1.02] transition"
+                className="h-full w-full object-cover group-hover:scale-[1.02] transition"
                 loading="lazy"
               />
-            </figure>
+            </button>
           ))}
 
           {/* tile final com ícone de plus e link Ver mais */}
@@ -133,6 +147,17 @@ export default function GallerySlider() {
           />
         ))}
       </div>
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <ImageLightbox
+          srcList={covers}
+          index={lightboxIndex}
+          onClose={() => setLightboxOpen(false)}
+          onIndexChange={setLightboxIndex}
+          caption={(i) => `${current.title} — Foto ${i + 1}`}
+        />
+      )}
     </div>
   );
 }

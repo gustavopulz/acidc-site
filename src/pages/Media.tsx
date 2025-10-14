@@ -1,10 +1,18 @@
 import Section from "../components/Section";
 import { getAlbumsSortedDesc } from "../data/gallery";
+import { useState } from "react";
+import ImageLightbox from "../components/ImageLightbox";
 
 export default function Media() {
+  const [open, setOpen] = useState(false);
+  const [albumIdx, setAlbumIdx] = useState<number | null>(null);
+  const [photoIdx, setPhotoIdx] = useState(0);
+
+  const albums = getAlbumsSortedDesc();
+
   return (
     <>
-      {getAlbumsSortedDesc().map((album, idx) => (
+      {albums.map((album, idx) => (
         <Section
           key={idx}
           title={`${album.title}`}
@@ -13,17 +21,24 @@ export default function Media() {
           {/* Fotos */}
           <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 mb-8">
             {album.photos.map((src, i) => (
-              <figure
+              <button
+                type="button"
                 key={i}
-                className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/5"
+                className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/5 group"
+                onClick={() => {
+                  setAlbumIdx(idx);
+                  setPhotoIdx(i);
+                  setOpen(true);
+                }}
+                aria-label={`Ampliar ${album.title} foto ${i + 1}`}
               >
                 <img
                   src={src}
                   alt={`${album.title} foto ${i + 1}`}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover group-hover:scale-[1.02] transition"
                   loading="lazy"
                 />
-              </figure>
+              </button>
             ))}
           </div>
 
@@ -49,6 +64,16 @@ export default function Media() {
           )}
         </Section>
       ))}
+
+      {open && albumIdx !== null && (
+        <ImageLightbox
+          srcList={albums[albumIdx].photos}
+          index={photoIdx}
+          onClose={() => setOpen(false)}
+          onIndexChange={setPhotoIdx}
+          caption={(i) => `${albums[albumIdx!].title} — Foto ${i + 1}`}
+        />
+      )}
     </>
   );
 }
