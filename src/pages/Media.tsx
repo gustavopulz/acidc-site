@@ -1,58 +1,54 @@
 import Section from "../components/Section";
+import { getAlbumsSortedDesc } from "../data/gallery";
 
 export default function Media() {
   return (
     <>
-      <Section title="Clipes" subtitle="Alguns momentos de alta voltagem.">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="aspect-video rounded-xl overflow-hidden border border-white/10">
-            <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/embed/54LEywabkl4"
-              title="YouTube video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+      {getAlbumsSortedDesc().map((album, idx) => (
+        <Section
+          key={idx}
+          title={`${album.title}`}
+          subtitle={`${album.date} — Fotos e Vídeos`}
+        >
+          {/* Fotos */}
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 mb-8">
+            {album.photos.map((src, i) => (
+              <figure
+                key={i}
+                className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/10 bg-white/5"
+              >
+                <img
+                  src={src}
+                  alt={`${album.title} foto ${i + 1}`}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+            ))}
           </div>
-          <div className="aspect-video rounded-xl overflow-hidden border border-white/10">
-            <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/embed/v2AC41dglnM"
-              title="YouTube video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
-      </Section>
 
-      <Section title="Setlist">
-        <ul className="grid gap-2 list-disc pl-6 text-white/80">
-          <li>1. Back in Black</li>
-          <li>2. Rock N' Roll Train</li>
-          <li>3. Moneytalks</li>
-          <li>4. High Voltage</li>
-          <li>5. Dirty Deeds Done Dirt Cheap</li>
-          <li>6. The Jack</li>
-          <li>7. Bad Boy Boogie</li>
-          <li>8. Touch Too Much</li>
-          <li>9. Shoot to Thrill</li>
-          <li>10. Hells Bells</li>
-          <li>11. Thunderstruck</li>
-          <li>12. Givin the Dog a Bone</li>
-          <li>13. Jailbreak</li>
-          <li>14. Rock N' Roll Damnation</li>
-          <li>15. Whole Lotta Rosie</li>
-          <li>16. T.N.T.</li>
-          <li>17. Let There Be Rock</li>
-          <li>18. Hard as a Rock</li>
-          <li>19. Shot in the Dark</li>
-          <li>20. You Shook Me All Night Long</li>
-          <li>21. Big Gun</li>
-          <li>22. Highway to Hell</li>
-          <li>23. For Those About to Rock (We Salute You)</li>
-        </ul>
-      </Section>
+          {/* Vídeos locais (mp4) se houver */}
+          {!!album.videos?.length && (
+            <div className="grid gap-6 sm:grid-cols-2 mb-2">
+              {album.videos.map((v, i) => (
+                <div
+                  key={i}
+                  className="rounded-xl overflow-hidden border border-white/10 bg-black/60"
+                >
+                  <video controls className="w-full h-auto">
+                    <source src={v.src} type="video/mp4" />
+                  </video>
+                  {v.title && (
+                    <div className="px-3 py-2 text-sm text-white/80">
+                      {v.title}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </Section>
+      ))}
     </>
   );
 }

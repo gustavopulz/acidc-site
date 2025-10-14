@@ -23,12 +23,21 @@ export default function Hero() {
           />
         </div>
         <Badge>We Salute You!</Badge>
-        <h1 className="mt-4 text-4xl sm:text-6xl font-black tracking-tight">
-          A energia do AC/DC ao vivo.
+        <h1 className="mt-4 text-4xl sm:text-5xl font-black tracking-tight">
+          ACID/C - Uma Experiência Única e Fiel à Lendária banda de Rock
+          Australiana!
         </h1>
-        <p className="mt-4 text-white/80 max-w-2xl mx-auto">
-          A banda cover ACID/C revive os maiores clássicos — com visual, som e
-          atitude. Veja a agenda, ouça um preview e chame pro seu evento.
+        <p className="mt-4 text-white/80 max-w-5xl mx-auto">
+          Uma verdadeira viagem no tempo, passando por todas as fases da banda,
+          com uma recriação detalhada dos elementos icônicos do AC/DC, desde os
+          instrumentos, roupas e alegorias de palco, como o famoso sino de
+          "Hells Bells" e os explosivos tiros de canhão em "For Those About To
+          Rock" ao famoso ‘’striptease’’ em "The Jack" um dos momentos mais
+          aguardados da apresentação. Se você deseja oferecer aos seus clientes
+          uma noite do mais puro Rock, com energia, adrenalina e um som
+          autêntico, a nossa banda é a escolha perfeita. Estamos prontos para
+          agitar o seu bar e fazer todos vivenciarem a verdadeira essência do
+          AC/DC!{" "}
         </p>
         <div className="mt-8 flex justify-center gap-3">
           <Link to="/shows">
