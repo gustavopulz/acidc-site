@@ -55,7 +55,7 @@ export default function GallerySlider() {
           ))}
 
           {/* tile final com ícone de plus e link Ver mais */}
-          <div className="col-span-2 sm:col-span-1">
+          <div className="col-span-1">
             <Link
               to="/media"
               className="group block"
