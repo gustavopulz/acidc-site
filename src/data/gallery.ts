@@ -1,12 +1,83 @@
+function getPinnedAlbums(albums: Album[]): Album[] {
+  return albums.filter((a) => a.pinned).slice(0, 3);
+}
+
+export function getAlbumsPinnedFirst(): Album[] {
+  const pinned = getPinnedAlbums(albums);
+  const notPinned = albums.filter((a) => !a.pinned);
+  return [...pinned, ...notPinned];
+}
 export type Album = {
   title: string;
-  date: string; // dd/mm/yyyy
-  folder: string; // path under /public, e.g., /uploads/hangar-04-10-2025
-  photos: string[]; // full web paths to images in folder
-  videos?: { src: string; title?: string }[]; // optional local videos (mp4)
+  date: string;
+  folder: string;
+  photos: string[];
+  videos?: { src: string; title?: string }[];
+  pinned?: {
+    photos?: string[];
+    videos?: { src: string; title?: string }[];
+  };
 };
 
 export const albums: Album[] = [
+  {
+    title: "Rock in Country - Itapira",
+    date: "18/10/2025",
+    folder: "/uploads/rock-in-country-18-10-2025",
+    photos: [
+      "/uploads/rock-in-country-18-10-2025/07f3d657-45e2-412d-ba93-42bac75ab25f.jpeg",
+      "/uploads/rock-in-country-18-10-2025/0a7f80ed-e66f-4cc2-a997-bcceabfc7549.jpeg",
+      "/uploads/rock-in-country-18-10-2025/11447e83-bde3-434f-a336-c1c2131d97cf.jpeg",
+      "/uploads/rock-in-country-18-10-2025/1e2f2a9b-6fd5-4d49-9398-f4b673208b4b.jpeg",
+      "/uploads/rock-in-country-18-10-2025/2506a0c2-cfc5-4243-a274-6c706ef2cb8d.jpeg",
+      "/uploads/rock-in-country-18-10-2025/333195de-e3f3-46b2-87fb-3eb1fc1ad41a.jpeg",
+      "/uploads/rock-in-country-18-10-2025/3b0c1e45-f753-485f-b45f-32274621e5b1.jpeg",
+      "/uploads/rock-in-country-18-10-2025/4a08df21-9be3-4856-9cf5-85ad8a977103.jpeg",
+      "/uploads/rock-in-country-18-10-2025/4edfc57e-8575-4d92-90db-c20dc9c0cc70.jpeg",
+      "/uploads/rock-in-country-18-10-2025/50c8bc89-5397-414a-b4d1-47c911a94258.jpeg",
+      "/uploads/rock-in-country-18-10-2025/50db1406-9548-4c24-acf1-9cb52bc8b258.jpeg",
+      "/uploads/rock-in-country-18-10-2025/5952a006-9ae1-44d4-b4a5-76feaee96cee.jpeg",
+      "/uploads/rock-in-country-18-10-2025/5fb8651a-50f5-48d9-8dfb-ad05f01bbee6.jpeg",
+      "/uploads/rock-in-country-18-10-2025/6f979a6b-06e6-48ca-abf8-e3ca9c04115c.jpeg",
+      "/uploads/rock-in-country-18-10-2025/706fe0cb-26a6-461c-87b2-7b2167f50890.jpeg",
+      "/uploads/rock-in-country-18-10-2025/7ec251ab-e59d-400a-9d00-87f3d9d7a5f7.jpeg",
+      "/uploads/rock-in-country-18-10-2025/80a91bd6-fbbd-4619-9c2c-4c72693da0ef.jpeg",
+      "/uploads/rock-in-country-18-10-2025/899fd4d6-35de-4d8b-9394-c2cef2b58875.jpeg",
+      "/uploads/rock-in-country-18-10-2025/8d245375-21ba-469b-83f9-82a8c54177cb.jpeg",
+      "/uploads/rock-in-country-18-10-2025/91b6a054-b5c1-41c2-9018-7be88db410b2.jpeg", // pinned
+      "/uploads/rock-in-country-18-10-2025/92dd4bc9-a8e0-4fec-a3d2-638cdeba22b8.jpeg",
+      "/uploads/rock-in-country-18-10-2025/98fefbc0-1494-491e-ab5a-f5f74174dd38.jpeg",
+      "/uploads/rock-in-country-18-10-2025/999420d9-6fc9-40f6-9e51-b85593efa694.jpeg",
+      "/uploads/rock-in-country-18-10-2025/baf81568-71d1-4d1e-8c92-4a5a21b0885e.jpeg",
+      "/uploads/rock-in-country-18-10-2025/bd572ecd-fc3a-4b61-abfa-7eca7368d07e.jpeg",
+      "/uploads/rock-in-country-18-10-2025/cd4495ad-ebe4-4ab5-a533-0fee6a709ccf.jpeg",
+      "/uploads/rock-in-country-18-10-2025/d1af96ac-f2f4-4ed9-94b1-914a5f644613.jpeg",
+      "/uploads/rock-in-country-18-10-2025/dccdd8c6-eff6-42b3-848e-c8ba7d0955dc.jpeg",
+      "/uploads/rock-in-country-18-10-2025/e68aa79e-e1ba-46f0-8419-d23552c47736.jpeg",
+      "/uploads/rock-in-country-18-10-2025/ebba1c75-8fed-4696-89b7-4b7651c635d5.jpeg",
+      "/uploads/rock-in-country-18-10-2025/f03daad4-0f69-4ba2-9a42-655473ee9ef3.jpeg",
+      "/uploads/rock-in-country-18-10-2025/f84760d7-e901-41bc-b828-27f7ea38ac99.jpeg",
+      "/uploads/rock-in-country-18-10-2025/fa9f6077-af89-4293-8b27-741394a922b6.jpeg",
+      "/uploads/rock-in-country-18-10-2025/fb485b0d-8d14-4989-b01d-5b891cdc2275.jpeg",
+      "/uploads/rock-in-country-18-10-2025/fe8865e5-299e-48cf-95ca-5667386a1725.jpeg",
+    ],
+    videos: [
+      {
+        src: "/uploads/rock-in-country-18-10-2025/VID_20251026_124254_315.mp4",
+      },
+    ],
+    pinned: {
+      videos: [
+        {
+          src: "/uploads/rock-in-country-18-10-2025/VID_20251026_124254_315.mp4",
+        },
+      ],
+      photos: [
+        "/uploads/rock-in-country-18-10-2025/91b6a054-b5c1-41c2-9018-7be88db410b2.jpeg",
+        "/uploads/rock-in-country-18-10-2025/fb485b0d-8d14-4989-b01d-5b891cdc2275.jpeg",
+      ],
+    },
+  },
   {
     title: "Hangar 111",
     date: "04/10/2025",

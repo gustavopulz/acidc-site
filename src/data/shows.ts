@@ -1,13 +1,13 @@
 import type { ShowInfo } from "../components/ShowCard";
 
 export const shows: ShowInfo[] = [
-  {
-    date: "18/10/2025",
-    city: "Itapira - SP",
-    venue: "Country Club - 17h",
-    status: "tickets",
-    link: "https://www.instagram.com/country_club_itapira",
-  },
+  // {
+  //   date: "18/10/2025",
+  //   city: "Itapira - SP",
+  //   venue: "Country Club - 17h",
+  //   status: "tickets",
+  //   link: "https://www.instagram.com/country_club_itapira",
+  // },
   {
     date: "15/11/2025",
     city: "Rio Claro - SP",

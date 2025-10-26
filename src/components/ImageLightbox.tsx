@@ -6,6 +6,7 @@ type ImageLightboxProps = {
   onClose: () => void;
   onIndexChange: (next: number) => void;
   caption?: string | ((index: number) => string | undefined);
+  isVideo?: (index: number) => boolean;
 };
 
 export default function ImageLightbox({
@@ -14,6 +15,7 @@ export default function ImageLightbox({
   onClose,
   onIndexChange,
   caption,
+  isVideo,
 }: ImageLightboxProps) {
   const total = srcList.length;
   const current = srcList[index];
@@ -154,16 +156,28 @@ export default function ImageLightbox({
         </>
       )}
 
-      {/* Imagem */}
+      {/* Imagem ou vídeo */}
       <figure className="flex items-center justify-center w-full max-w-[95vw] max-h-[90vh]">
-        <img
-          src={current}
-          alt=""
-          className={`max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg select-none transition-opacity duration-300 ${
-            fadeIn ? "opacity-100" : "opacity-0"
-          }`}
-          draggable={false}
-        />
+        {isVideo && isVideo(index) ? (
+          <video
+            src={current}
+            controls
+            autoPlay
+            className={`max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg select-none transition-opacity duration-300 ${
+              fadeIn ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ background: '#000' }}
+          />
+        ) : (
+          <img
+            src={current}
+            alt=""
+            className={`max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg select-none transition-opacity duration-300 ${
+              fadeIn ? "opacity-100" : "opacity-0"
+            }`}
+            draggable={false}
+          />
+        )}
         {caption && (
           <figcaption className="absolute bottom-6 w-full text-center text-white/80 text-sm">
             {typeof caption === "function" ? caption(index) : caption}
