@@ -12,7 +12,8 @@ export const shows: ShowInfo[] = [
     date: "15/11/2025",
     city: "Rio Claro - SP",
     venue: "Aniversário do Zapata MC",
-    status: "soon",
+    status: "tickets",
+    link: "https://www.instagram.com/zapata_subsede_rioclaro",
   },
   {
     date: "22/11/2025",
