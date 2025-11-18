@@ -38,7 +38,7 @@ export default function About() {
       {/* Imagem da banda */}
       <div className="mt-10 flex justify-center">
         <img
-          src="/banda.png"
+          src="/uploads/foto-capa.png"
           alt="Foto da banda ACID/C"
           className="rounded-xl border border-white/10 shadow-[0_0_25px_rgba(255,90,90,0.3)] w-full h-auto"
         />

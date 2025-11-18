@@ -21,6 +21,25 @@ export type Album = {
 
 export const albums: Album[] = [
   {
+    title: "Zapata MC - Rio Claro",
+    date: "15/11/2025",
+    folder: "/uploads/zapata-15-11-2025",
+    photos: ["/uploads/zapata-15-11-2025/foto-capa.jpeg"],
+    videos: [
+      {
+        src: "/uploads/zapata-15-11-2025/video.mp4",
+      },
+    ],
+    pinned: {
+      videos: [
+        {
+          src: "/uploads/zapata-15-11-2025/video.mp4",
+        },
+      ],
+      photos: ["/uploads/zapata-15-11-2025/foto-capa.jpeg"],
+    },
+  },
+  {
     title: "Rock in Country - Itapira",
     date: "18/10/2025",
     folder: "/uploads/rock-in-country-18-10-2025",
