@@ -21,6 +21,28 @@ export type Album = {
 
 export const albums: Album[] = [
   {
+    title: "Cali Skate Company - Mogi Mirim",
+    date: "22/11/2025",
+    folder: "/uploads/cali-22-11-2025",
+    photos: [],
+    videos: [
+      { src: "/uploads/cali-22-11-2025/1.mp4" },
+      { src: "/uploads/cali-22-11-2025/2.mp4" },
+      { src: "/uploads/cali-22-11-2025/3.mp4" },
+      { src: "/uploads/cali-22-11-2025/4.mp4" },
+      { src: "/uploads/cali-22-11-2025/5.mp4" },
+      { src: "/uploads/cali-22-11-2025/6.mp4" },
+      { src: "/uploads/cali-22-11-2025/7.mp4" },
+    ],
+    pinned: {
+      videos: [
+        { src: "/uploads/cali-22-11-2025/1.mp4" },
+        { src: "/uploads/cali-22-11-2025/2.mp4" },
+        { src: "/uploads/cali-22-11-2025/3.mp4" },
+      ],
+    },
+  },
+  {
     title: "Zapata MC - Rio Claro",
     date: "15/11/2025",
     folder: "/uploads/zapata-15-11-2025",
