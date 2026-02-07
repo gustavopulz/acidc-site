@@ -5,14 +5,14 @@ export const shows: ShowInfo[] = [
     date: "11/04/2026",
     city: "Leme - SP",
     venue: "Independente MC",
-    status: "soon",
+    status: "tickets",
     link: "https://www.instagram.com/country_club_itapira",
   },
   {
     date: "20/06/2026",
     city: "Leme - SP",
     venue: "Kaiowas MC",
-    status: "soon",
+    status: "tickets",
     link: "https://www.instagram.com/zapata_subsede_rioclaro",
   },
   {
