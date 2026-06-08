@@ -68,6 +68,11 @@ export const api = {
       method: "DELETE",
       body: JSON.stringify({ photoId }),
     }),
+  pinPhoto: (albumId: string, photoId: string, pinned: boolean) =>
+    apiFetch(`/api/albums/${albumId}/photos`, {
+      method: "PATCH",
+      body: JSON.stringify({ photoId, pinned }),
+    }),
   addVideo: (albumId: string, file: File, thumbnail?: File, title?: string): Promise<Video> => {
     const fd = new FormData();
     fd.append("file", file);
@@ -86,6 +91,11 @@ export const api = {
     apiFetch(`/api/albums/${albumId}/videos`, {
       method: "DELETE",
       body: JSON.stringify({ videoId }),
+    }),
+  pinVideo: (albumId: string, videoId: string, pinned: boolean) =>
+    apiFetch(`/api/albums/${albumId}/videos`, {
+      method: "PATCH",
+      body: JSON.stringify({ videoId, pinned }),
     }),
 
   // News

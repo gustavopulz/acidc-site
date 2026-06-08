@@ -33,6 +33,18 @@ export async function POST(
   return NextResponse.json(created, { status: 201 });
 }
 
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!await requireAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id: albumId } = await params;
+  const { photoId, pinned } = await req.json();
+  const photo = await prisma.photo.update({ where: { id: photoId, albumId }, data: { pinned } });
+  return NextResponse.json(photo);
+}
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

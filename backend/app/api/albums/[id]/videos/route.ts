@@ -44,6 +44,18 @@ export async function POST(
   return NextResponse.json({ ...video, thumbnail }, { status: 201 });
 }
 
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!await requireAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id: albumId } = await params;
+  const { videoId, pinned } = await req.json();
+  const video = await prisma.video.update({ where: { id: videoId, albumId }, data: { pinned } });
+  return NextResponse.json(video);
+}
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

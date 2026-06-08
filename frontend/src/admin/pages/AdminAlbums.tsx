@@ -172,6 +172,18 @@ export default function AdminAlbums() {
     load();
   }
 
+  async function togglePhotoPin(albumId: string, photoId: string, currentPinned: boolean) {
+    await api.pinPhoto(albumId, photoId, !currentPinned);
+    const updated = await api.getAlbum(albumId);
+    setSelected(updated);
+  }
+
+  async function toggleVideoPin(albumId: string, videoId: string, currentPinned: boolean) {
+    await api.pinVideo(albumId, videoId, !currentPinned);
+    const updated = await api.getAlbum(albumId);
+    setSelected(updated);
+  }
+
   const Field = ({ label, field, placeholder }: { label: string; field: keyof AlbumForm; placeholder: string }) => (
     <div>
       <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">{label}</label>
@@ -296,7 +308,22 @@ export default function AdminAlbums() {
                           {selected.photos.map((ph) => (
                             <div key={ph.id} className="relative group aspect-square rounded-lg overflow-hidden bg-[#0d0d0d]">
                               <img src={`${BASE}${ph.url}`} alt="" className="w-full h-full object-cover" />
-                              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              {/* Pinned badge — always visible */}
+                              {ph.pinned && (
+                                <div className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-amber-400 flex items-center justify-center pointer-events-none z-10">
+                                  <svg className="w-3 h-3 text-black" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                                    <path d="M17 4H7a1 1 0 0 0-.7 1.7l3 3V13l-2 4h13l-2-4V8.7l3-3A1 1 0 0 0 17 4zm-5 15-1-2h2l-1 2z"/>
+                                  </svg>
+                                </div>
+                              )}
+                              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button onClick={() => togglePhotoPin(selected.id, ph.id, ph.pinned)}
+                                  title={ph.pinned ? "Desafixar" : "Fixar"}
+                                  className={`p-1.5 rounded-full text-white transition-colors ${ph.pinned ? "bg-amber-500/80 hover:bg-amber-500" : "bg-zinc-700/80 hover:bg-zinc-600"}`}>
+                                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                                    <path d="M17 4H7a1 1 0 0 0-.7 1.7l3 3V13l-2 4h13l-2-4V8.7l3-3A1 1 0 0 0 17 4zm-5 15-1-2h2l-1 2z"/>
+                                  </svg>
+                                </button>
                                 <button onClick={() => deletePhoto(selected.id, ph.id)}
                                   className="p-1.5 bg-red-600/80 rounded-full text-white hover:bg-red-600 transition-colors">
                                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -329,8 +356,20 @@ export default function AdminAlbums() {
                                     </svg>
                                   </div>
                                 </button>
-                                {/* delete */}
-                                <button onClick={() => deleteVideo(selected.id, v.id)}
+                                {/* pin button (top-left) */}
+                                <button onClick={(e) => { e.stopPropagation(); toggleVideoPin(selected.id, v.id, v.pinned); }}
+                                  title={v.pinned ? "Desafixar" : "Fixar"}
+                                  className={`absolute top-1.5 left-1.5 p-1 rounded-full transition-all ${
+                                    v.pinned
+                                      ? "bg-amber-500/80 text-white opacity-100"
+                                      : "bg-black/70 text-zinc-400 hover:text-amber-400 opacity-0 group-hover:opacity-100"
+                                  }`}>
+                                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                                    <path d="M17 4H7a1 1 0 0 0-.7 1.7l3 3V13l-2 4h13l-2-4V8.7l3-3A1 1 0 0 0 17 4zm-5 15-1-2h2l-1 2z"/>
+                                  </svg>
+                                </button>
+                                {/* delete (top-right) */}
+                                <button onClick={(e) => { e.stopPropagation(); deleteVideo(selected.id, v.id); }}
                                   className="absolute top-1.5 right-1.5 p-1 bg-black/70 rounded-full text-zinc-400 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
                                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
