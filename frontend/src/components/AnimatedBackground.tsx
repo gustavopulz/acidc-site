@@ -194,6 +194,14 @@ function WheelGroup({
   const spokes = large ? 8 : 6;
   return (
     <g>
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from={`0 ${cx} ${cy}`}
+        to={`-360 ${cx} ${cy}`}
+        dur={large ? "1.8s" : "1.1s"}
+        repeatCount="indefinite"
+      />
       <circle cx={cx} cy={cy} r={r} fill="rgba(25,8,0,0.95)" stroke="rgba(255,90,0,0.5)" strokeWidth="1.5" />
       <circle cx={cx} cy={cy} r={r * 0.15} fill="rgba(255,90,0,0.6)" />
       {/* Spokes */}
