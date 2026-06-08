@@ -25,7 +25,7 @@ export default function Home() {
             com músicas que vão de Bon Scott a Brian Johnson, sempre mantendo a
             autenticidade do som original, o vocalista Lupa Rock é um verdadeiro
             mestre na interpretação, no carisma e timbre de ambos os cantores,
-            juntos com o guitarrista Gustavo e o baixista Daniel, a banda
+            juntos com o guitarrista Gustavo e o baixista Allan, a banda
             entrega uma performance vibrante, cheia de atitude e precisão!
           </p>
           <p>

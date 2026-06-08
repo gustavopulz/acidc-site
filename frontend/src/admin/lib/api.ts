@@ -36,7 +36,7 @@ export const api = {
   me: () => apiFetch<{ id: string; name: string; email: string }>("/api/auth/me"),
 
   // Shows
-  getShows: () => apiFetch<Show[]>("/api/shows"),
+  getShows: (all = false) => apiFetch<Show[]>(`/api/shows${all ? "?all=true" : ""}`),
   createShow: (data: ShowForm) =>
     apiFetch<Show>("/api/shows", { method: "POST", body: JSON.stringify(data) }),
   updateShow: (id: string, data: ShowForm) =>
@@ -68,6 +68,25 @@ export const api = {
       method: "DELETE",
       body: JSON.stringify({ photoId }),
     }),
+  addVideo: (albumId: string, file: File, thumbnail?: File, title?: string): Promise<Video> => {
+    const fd = new FormData();
+    fd.append("file", file);
+    if (thumbnail) fd.append("thumbnail", thumbnail);
+    if (title) fd.append("title", title);
+    return fetch(`${BASE}/api/albums/${albumId}/videos`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token()}` },
+      body: fd,
+    }).then((r) => {
+      if (!r.ok) throw new Error("Erro ao enviar vídeo");
+      return r.json() as Promise<Video>;
+    });
+  },
+  deleteVideo: (albumId: string, videoId: string) =>
+    apiFetch(`/api/albums/${albumId}/videos`, {
+      method: "DELETE",
+      body: JSON.stringify({ videoId }),
+    }),
 
   // News
   getNews: (all = false) => apiFetch<NewsItem[]>(`/api/news${all ? "?all=true" : ""}`),
@@ -90,14 +109,14 @@ export const api = {
 
 // Types
 export interface Show {
-  id: string; date: string; city: string; venue: string; status?: string; link?: string;
+  id: string; date: string; city: string; venue: string; status?: string; link?: string; active: boolean;
 }
 export interface ShowForm {
   date: string; city: string; venue: string; status?: string; link?: string;
 }
 
 export interface Photo { id: string; url: string; pinned: boolean }
-export interface Video { id: string; src: string; title?: string; pinned: boolean }
+export interface Video { id: string; src: string; thumbnail?: string; title?: string; pinned: boolean }
 export interface Album {
   id: string; title: string; date: string; folder: string;
   photos: Photo[]; videos: Video[];

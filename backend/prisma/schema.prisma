@@ -46,12 +46,13 @@ model Photo {
 }
 
 model Video {
-  id      String  @id @default(cuid())
-  src     String
-  title   String?
-  pinned  Boolean @default(false)
-  albumId String
-  album   Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  id        String  @id @default(cuid())
+  src       String
+  thumbnail String?
+  title     String?
+  pinned    Boolean @default(false)
+  albumId   String
+  album     Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
 }
 
 model News {

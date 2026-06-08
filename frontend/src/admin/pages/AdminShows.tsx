@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, type Show, type ShowForm } from "../lib/api";
+import DateInput from "../components/DateInput";
 
 const STATUS_LABEL: Record<string, string> = { tickets: "Ingressos", soldout: "Esgotado", soon: "Em breve" };
 const STATUS_COLOR: Record<string, string> = {
@@ -17,7 +18,7 @@ export default function AdminShows() {
   const [saving, setSaving]   = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  async function load() { setShows(await api.getShows()); }
+  async function load() { setShows(await api.getShows(true)); }
   useEffect(() => { load(); }, []);
 
   function openNew()          { setForm(EMPTY); setModal("new"); }
@@ -40,7 +41,7 @@ export default function AdminShows() {
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Shows</h1>
@@ -69,12 +70,16 @@ export default function AdminShows() {
               </thead>
               <tbody className="divide-y divide-[#222]">
                 {shows.map((s) => (
-                  <tr key={s.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="px-6 py-4 text-white font-mono">{s.date}</td>
+                  <tr key={s.id} className={`transition-colors ${s.active ? "hover:bg-white/[0.02]" : "opacity-50 hover:opacity-70"}`}>
+                    <td className="px-6 py-4 font-mono text-white">{s.date}</td>
                     <td className="px-6 py-4 text-zinc-300">{s.city}</td>
                     <td className="px-6 py-4 text-zinc-300">{s.venue}</td>
                     <td className="px-6 py-4">
-                      {s.status ? (
+                      {!s.active ? (
+                        <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium border text-zinc-500 bg-zinc-800/50 border-zinc-700">
+                          Desativado
+                        </span>
+                      ) : s.status ? (
                         <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium border ${STATUS_COLOR[s.status] ?? "text-zinc-400"}`}>
                           {STATUS_LABEL[s.status] ?? s.status}
                         </span>
@@ -105,9 +110,10 @@ export default function AdminShows() {
       {modal !== null && (
         <Modal title={modal === "new" ? "Novo Show" : "Editar Show"} onClose={() => setModal(null)}>
           <div className="space-y-4">
-            {(["date", "city", "venue", "link"] as const).map((field) => (
-              <Field key={field} label={{ date: "Data", city: "Cidade", venue: "Local", link: "Link" }[field] ?? field}
-                placeholder={{ date: "dd/mm/aaaa", city: "São Paulo", venue: "Arena XYZ", link: "https://..." }[field] ?? ""}
+            <DateInput label="Data" value={form.date} onChange={(v) => setForm((f) => ({ ...f, date: v }))} withTime />
+            {(["city", "venue", "link"] as const).map((field) => (
+              <Field key={field} label={{ city: "Cidade", venue: "Local", link: "Link" }[field] ?? field}
+                placeholder={{ city: "São Paulo", venue: "Arena XYZ", link: "https://..." }[field] ?? ""}
                 value={form[field] ?? ""}
                 onChange={(v) => setForm((f) => ({ ...f, [field]: v }))} />
             ))}
@@ -145,11 +151,11 @@ function Field({ label, placeholder, value, onChange }: { label: string; placeho
   );
 }
 
-export function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+export function Modal({ title, onClose, children, wide = false }: { title: string; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="bg-[#111] border border-[#2a2a2a] rounded-2xl w-full max-w-md shadow-2xl">
-        <div className="px-6 py-5 border-b border-[#2a2a2a] flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm">
+      <div className={`bg-[#111] border border-[#2a2a2a] rounded-t-2xl sm:rounded-2xl w-full shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[85vh] ${wide ? "sm:max-w-3xl" : "sm:max-w-md"}`}>
+        <div className="px-6 py-5 border-b border-[#2a2a2a] flex items-center justify-between flex-shrink-0">
           <h2 className="text-lg font-semibold text-white">{title}</h2>
           <button onClick={onClose} className="text-zinc-600 hover:text-zinc-300 transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -157,7 +163,7 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
             </svg>
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-y-auto">{children}</div>
       </div>
     </div>
   );

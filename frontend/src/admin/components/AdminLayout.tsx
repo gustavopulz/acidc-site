@@ -1,5 +1,6 @@
-import { NavLink, Outlet, Navigate } from "react-router-dom";
+import { NavLink, Outlet, Navigate, useLocation } from "react-router-dom";
 import { useAdminAuth } from "../context/AuthContext";
+import { useState, useEffect } from "react";
 
 const nav = [
   {
@@ -22,7 +23,7 @@ const nav = [
 
 function Icon({ d }: { d: React.ReactNode }) {
   return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+    <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
       {d}
     </svg>
   );
@@ -30,6 +31,16 @@ function Icon({ d }: { d: React.ReactNode }) {
 
 export default function AdminLayout() {
   const { user, loading, logout } = useAdminAuth();
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   if (loading) {
     return (
@@ -43,10 +54,24 @@ export default function AdminLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#0d0d0d] text-zinc-100">
+
+      {/* Mobile overlay */}
+      {open && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-60 flex-shrink-0 bg-[#111] border-r border-[#2a2a2a] flex flex-col">
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-60 flex-shrink-0 bg-[#111] border-r border-[#2a2a2a] flex flex-col
+        transition-transform duration-200
+        md:relative md:translate-x-0
+        ${open ? "translate-x-0" : "-translate-x-full"}
+      `}>
         {/* Logo */}
-        <div className="px-5 py-5 border-b border-[#2a2a2a]">
+        <div className="px-5 py-5 border-b border-[#2a2a2a] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center flex-shrink-0"
               style={{ boxShadow: "0 0 12px rgba(220,38,38,0.5)" }}>
@@ -59,14 +84,18 @@ export default function AdminLayout() {
               <p className="text-zinc-500 text-xs">Admin</p>
             </div>
           </div>
+          <button onClick={() => setOpen(false)}
+            className="md:hidden p-1 text-zinc-500 hover:text-white transition-colors" aria-label="Fechar menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {nav.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
+            <NavLink key={item.to} to={item.to}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   isActive
@@ -84,11 +113,16 @@ export default function AdminLayout() {
         {/* User + logout */}
         <div className="px-3 py-4 border-t border-[#2a2a2a] space-y-2">
           <p className="px-3 text-xs text-zinc-600 truncate">{user.email}</p>
-          <button
-            onClick={logout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-red-400 hover:bg-red-500/5 transition-all"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+          <a href="/"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
+            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Ver site
+          </a>
+          <button onClick={logout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-red-400 hover:bg-red-500/5 transition-all">
+            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
             Sair
@@ -96,10 +130,32 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* Content */}
-      <main className="flex-1 overflow-y-auto">
-        <Outlet />
-      </main>
+      {/* Content area */}
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        {/* Mobile top bar */}
+        <div className="md:hidden flex items-center gap-3 px-4 h-14 bg-[#111] border-b border-[#2a2a2a] flex-shrink-0">
+          <button onClick={() => setOpen(true)} aria-label="Abrir menu"
+            className="p-1.5 text-zinc-400 hover:text-white transition-colors">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-red-600 flex items-center justify-center"
+              style={{ boxShadow: "0 0 8px rgba(220,38,38,0.4)" }}>
+              <svg viewBox="0 0 24 24" fill="none" className="w-3 h-3">
+                <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z" fill="white" />
+              </svg>
+            </div>
+            <span className="font-bold text-white text-sm tracking-widest">ACID/C</span>
+            <span className="text-zinc-600 text-xs">Admin</span>
+          </div>
+        </div>
+
+        <main className="flex-1 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function About() {
           vão de Bon Scott a Brian Johnson, sempre mantendo a autenticidade do
           som original, o vocalista Lupa Rock é um verdadeiro mestre na
           interpretação, no carisma e timbre de ambos os cantores, juntos com o
-          guitarrista Gustavo e o baixista Daniel, a banda entrega uma
+          guitarrista Gustavo e o baixista Allan, a banda entrega uma
           performance vibrante, cheia de atitude e precisão!
         </p>
         <p>
@@ -38,7 +38,7 @@ export default function About() {
       {/* Imagem da banda */}
       <div className="mt-10 flex justify-center">
         <img
-          src="/uploads/foto-capa.png"
+          src="/banda_new.jpg"
           alt="Foto da banda ACID/C"
           className="rounded-xl border border-white/10 shadow-[0_0_25px_rgba(255,90,90,0.3)] w-full h-auto"
         />

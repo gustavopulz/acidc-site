@@ -7,7 +7,19 @@ export async function GET() {
     orderBy: { date: "desc" },
     include: { photos: true, videos: true },
   });
-  return NextResponse.json(albums);
+
+  // Prisma client may not know about `thumbnail` yet — fetch via raw SQL and merge
+  const thumbs = await prisma.$queryRaw<{ id: string; thumbnail: string | null }[]>`
+    SELECT "id", "thumbnail" FROM "Video"
+  `;
+  const thumbMap = new Map(thumbs.map((t) => [t.id, t.thumbnail]));
+
+  const result = albums.map((album) => ({
+    ...album,
+    videos: album.videos.map((v) => ({ ...v, thumbnail: thumbMap.get(v.id) ?? null })),
+  }));
+
+  return NextResponse.json(result);
 }
 
 export async function POST(req: NextRequest) {

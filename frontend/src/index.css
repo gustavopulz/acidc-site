@@ -19,15 +19,17 @@
   100% { transform: translateX(-620px); }
 }
 
-/* Bell: swings then rests */
+/* Bell: heavy swing with glow flash at each extreme */
 @keyframes bellSwing {
-  0%, 40%, 100%  { transform: rotate(0deg);   }
-  5%             { transform: rotate(22deg);  }
-  12%            { transform: rotate(-22deg); }
-  18%            { transform: rotate(16deg);  }
-  24%            { transform: rotate(-12deg); }
-  30%            { transform: rotate(7deg);   }
-  36%            { transform: rotate(-4deg);  }
+  0%, 38%, 100% { transform: rotate(0deg);   filter: drop-shadow(0 0 0px rgba(255,150,0,0)); }
+  4%            { transform: rotate(28deg);  filter: drop-shadow(0 0 16px rgba(255,180,0,0.7)); }
+  5%            { transform: rotate(27deg);  filter: drop-shadow(0 0 6px  rgba(255,150,0,0.3)); }
+  13%           { transform: rotate(-28deg); filter: drop-shadow(0 0 16px rgba(255,180,0,0.7)); }
+  14%           { transform: rotate(-27deg); filter: drop-shadow(0 0 6px  rgba(255,150,0,0.3)); }
+  20%           { transform: rotate(18deg);  }
+  26%           { transform: rotate(-12deg); }
+  31%           { transform: rotate(7deg);   }
+  35%           { transform: rotate(-3deg);  }
 }
 
 /* Smoke puff: rises and fades */
@@ -63,7 +65,13 @@
 
 .animate-bell {
   transform-origin: top center;
-  animation: bellSwing ease-in-out 7s infinite;
+  animation: bellSwing ease-in-out 8s infinite;
+}
+
+.animate-bell-delay {
+  transform-origin: top center;
+  animation: bellSwing ease-in-out 8s infinite;
+  animation-delay: 4s;
 }
 
 .animate-smoke {
@@ -82,3 +90,15 @@
 .glow {
   box-shadow: 0 0 20px rgba(255, 90, 90, 0.4), 0 0 40px rgba(255, 122, 0, 0.25);
 }
+
+/***** News article markdown rendering *****/
+.news-content h1 { font-size: 1.5rem; font-weight: 700; margin: 1.25rem 0 0.5rem; color: #fff; }
+.news-content h2 { font-size: 1.25rem; font-weight: 700; margin: 1.25rem 0 0.5rem; color: #fff; }
+.news-content h3 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.4rem; color: rgba(255,255,255,0.9); }
+.news-content p  { margin: 0.6rem 0; }
+.news-content ul { list-style: disc; padding-left: 1.5rem; margin: 0.6rem 0; }
+.news-content li { margin: 0.25rem 0; }
+.news-content hr { border-color: rgba(255,255,255,0.12); margin: 1.25rem 0; }
+.news-content blockquote { border-left: 3px solid rgba(220,38,38,0.7); padding-left: 1rem; color: rgba(255,255,255,0.6); font-style: italic; margin: 0.75rem 0; }
+.news-content strong { font-weight: 700; color: #fff; }
+.news-content em { font-style: italic; }

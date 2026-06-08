@@ -58,7 +58,7 @@ export default function AdminDashboard() {
   const chartData = data?.dailySeries.map((d) => ({ ...d, date: fmt(d.date) })) ?? [];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-6xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
         <p className="text-zinc-500 text-sm mt-1">Visão geral de acessos ao site</p>

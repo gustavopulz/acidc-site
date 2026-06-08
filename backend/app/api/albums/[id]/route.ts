@@ -12,7 +12,17 @@ export async function GET(
     include: { photos: true, videos: true },
   });
   if (!album) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(album);
+
+  // Prisma client may not know about `thumbnail` yet — fetch via raw SQL and merge
+  const thumbs = await prisma.$queryRaw<{ id: string; thumbnail: string | null }[]>`
+    SELECT "id", "thumbnail" FROM "Video" WHERE "albumId" = ${id}
+  `;
+  const thumbMap = new Map(thumbs.map((t) => [t.id, t.thumbnail]));
+
+  return NextResponse.json({
+    ...album,
+    videos: album.videos.map((v) => ({ ...v, thumbnail: thumbMap.get(v.id) ?? null })),
+  });
 }
 
 export async function PUT(

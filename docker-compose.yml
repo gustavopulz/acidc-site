@@ -8,7 +8,7 @@ services:
     container_name: acidc-backend
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "3002:3001"
     environment:
       DATABASE_URL: "file:/app/prisma/prod.db"
       JWT_SECRET: "${JWT_SECRET}"

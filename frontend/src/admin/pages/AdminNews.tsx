@@ -1,11 +1,155 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, type NewsItem, type NewsDetail, type NewsForm } from "../lib/api";
 import { Modal, ModalActions, ConfirmDelete } from "./AdminShows";
 
 const EMPTY: NewsForm = { title: "", slug: "", content: "", excerpt: "", coverImage: "", published: false };
+const BASE = import.meta.env.VITE_API_URL ?? "";
 
 function slugify(s: string) {
   return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+/* ── Field — module-level to prevent input remount on every render ── */
+function Field({ label, value, onChange, placeholder, type = "text" }: {
+  label: string; value: string; onChange: (v: string) => void;
+  placeholder?: string; type?: string;
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">{label}</label>
+      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+        className="w-full bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-white placeholder-zinc-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition"
+      />
+    </div>
+  );
+}
+
+/* ── ImageUpload ─────────────────────────────────────────────────── */
+function ImageUpload({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  async function handleFile(file: File) {
+    if (!file.type.startsWith("image/")) return;
+    setUploading(true);
+    try {
+      const token = localStorage.getItem("adminToken") ?? "";
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch(`${BASE}/api/uploads`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      });
+      const data = await res.json();
+      if (data.url) onChange(`${BASE}${data.url}`);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div>
+      <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">Imagem de capa</label>
+      <div className="flex items-center gap-3">
+        {value && (
+          <img src={value} alt="capa" className="h-16 w-24 object-cover rounded-lg border border-[#2a2a2a] flex-shrink-0" />
+        )}
+        <button type="button" disabled={uploading} onClick={() => inputRef.current?.click()}
+          className="flex items-center gap-2 px-3 py-2 bg-[#0d0d0d] hover:bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-sm text-zinc-400 hover:text-white transition-colors disabled:opacity-50">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          {uploading ? "Enviando…" : value ? "Trocar imagem" : "Escolher imagem"}
+        </button>
+        {value && (
+          <button type="button" onClick={() => onChange("")} title="Remover imagem"
+            className="text-zinc-600 hover:text-red-400 transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
+      <input ref={inputRef} type="file" accept="image/*" className="hidden"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }} />
+    </div>
+  );
+}
+
+/* ── RichTextArea ────────────────────────────────────────────────── */
+function RichTextArea({ value, onChange, rows = 14, placeholder }: {
+  value: string; onChange: (v: string) => void; rows?: number; placeholder?: string;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const pendingCursor = useRef<[number, number] | null>(null);
+
+  useEffect(() => {
+    if (pendingCursor.current && ref.current) {
+      ref.current.selectionStart = pendingCursor.current[0];
+      ref.current.selectionEnd = pendingCursor.current[1];
+      pendingCursor.current = null;
+    }
+  });
+
+  function wrap(before: string, after = "") {
+    const el = ref.current;
+    if (!el) return;
+    const [s, e] = [el.selectionStart, el.selectionEnd];
+    const sel = value.slice(s, e);
+    onChange(value.slice(0, s) + before + sel + after + value.slice(e));
+    pendingCursor.current = [s + before.length, s + before.length + sel.length];
+  }
+
+  function linePrefix(prefix: string) {
+    const el = ref.current;
+    if (!el) return;
+    const pos = el.selectionStart;
+    const lineStart = value.lastIndexOf("\n", pos - 1) + 1;
+    onChange(value.slice(0, lineStart) + prefix + value.slice(lineStart));
+    pendingCursor.current = [pos + prefix.length, pos + prefix.length];
+  }
+
+  function insertHR() {
+    const el = ref.current;
+    if (!el) return;
+    const pos = el.selectionStart;
+    const insert = "\n---\n";
+    onChange(value.slice(0, pos) + insert + value.slice(pos));
+    pendingCursor.current = [pos + insert.length, pos + insert.length];
+  }
+
+  const actions = [
+    { label: "H2",       title: "Título (H2)",         action: () => linePrefix("## ")  },
+    { label: "H3",       title: "Subtítulo (H3)",       action: () => linePrefix("### ") },
+    { label: "B",        title: "Negrito",   bold: true, action: () => wrap("**", "**")  },
+    { label: "I",        title: "Itálico", italic: true, action: () => wrap("_", "_")    },
+    { label: "—",        title: "Separador horizontal", action: insertHR                 },
+    { label: "• Lista",  title: "Item de lista",        action: () => linePrefix("- ")   },
+    { label: "❝ Citação",title: "Bloco de citação",     action: () => linePrefix("> ")   },
+  ];
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-1 mb-2">
+        {actions.map(({ label, title, bold, italic, action }) => (
+          <button key={label} type="button" title={title}
+            onMouseDown={(e) => { e.preventDefault(); action(); }}
+            className="px-2.5 py-1 text-xs text-zinc-400 hover:text-white bg-[#0d0d0d] hover:bg-[#1a1a1a] border border-[#2a2a2a] rounded transition-colors"
+            style={{ fontWeight: bold ? "bold" : undefined, fontStyle: italic ? "italic" : undefined }}>
+            {label}
+          </button>
+        ))}
+      </div>
+      <textarea ref={ref} value={value} onChange={(e) => onChange(e.target.value)}
+        rows={rows} placeholder={placeholder}
+        className="w-full bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-white placeholder-zinc-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition font-mono leading-relaxed resize-y"
+      />
+      <p className="text-xs text-zinc-700 mt-1">Markdown: **negrito**, _itálico_, ## título, - lista, --- separador</p>
+    </div>
+  );
 }
 
 export default function AdminNews() {
@@ -41,7 +185,7 @@ export default function AdminNews() {
   function setField<K extends keyof NewsForm>(key: K, val: NewsForm[K]) {
     setForm((f) => {
       const next = { ...f, [key]: val };
-      if (key === "title" && f.slug === "") next.slug = slugify(String(val));
+      if (key === "title") next.slug = slugify(String(val));
       return next;
     });
   }
@@ -67,21 +211,8 @@ export default function AdminNews() {
       ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
       : "text-amber-400 bg-amber-500/10 border-amber-500/20";
 
-  const TextField = ({ label, field, placeholder, type = "text" }: { label: string; field: keyof NewsForm; placeholder: string; type?: string }) => (
-    <div>
-      <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">{label}</label>
-      <input
-        type={type}
-        value={String(form[field] ?? "")}
-        onChange={(e) => setField(field, e.target.value as never)}
-        placeholder={placeholder}
-        className="w-full bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-white placeholder-zinc-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition"
-      />
-    </div>
-  );
-
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 sm:p-8 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Notícias</h1>
@@ -169,11 +300,17 @@ export default function AdminNews() {
       </div>
 
       {modal !== null && (
-        <Modal title={modal === "new" ? "Nova Notícia" : "Editar Notícia"} onClose={() => setModal(null)}>
-          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-            <TextField label="Título" field="title" placeholder="AC/DC anuncia turnê no Brasil" />
-            <TextField label="Slug" field="slug" placeholder="ac-dc-turne-brasil" />
-            <TextField label="Imagem de capa (URL)" field="coverImage" placeholder="https://..." />
+        <Modal title={modal === "new" ? "Nova Notícia" : "Editar Notícia"} onClose={() => setModal(null)} wide>
+          <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+            <Field label="Título" value={form.title}
+              onChange={(v) => setField("title", v)} placeholder="AC/DC anuncia turnê no Brasil" />
+            <div>
+              <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">Slug (gerado automaticamente)</label>
+              <div className="w-full bg-[#080808] border border-[#1e1e1e] rounded-lg px-4 py-2.5 text-sm text-zinc-500 font-mono truncate">
+                /{form.slug || <span className="text-zinc-700">será-gerado-do-titulo</span>}
+              </div>
+            </div>
+            <ImageUpload value={form.coverImage ?? ""} onChange={(v) => setField("coverImage", v)} />
             <div>
               <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">Resumo</label>
               <textarea value={String(form.excerpt ?? "")} onChange={(e) => setField("excerpt", e.target.value)}
@@ -182,9 +319,8 @@ export default function AdminNews() {
             </div>
             <div>
               <label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1.5">Conteúdo</label>
-              <textarea value={form.content} onChange={(e) => setField("content", e.target.value)}
-                rows={10} placeholder="Escreva o conteúdo aqui..."
-                className="w-full bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-white placeholder-zinc-700 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition resize-none" />
+              <RichTextArea value={form.content} onChange={(v) => setField("content", v)}
+                placeholder="Escreva o conteúdo aqui..." />
             </div>
             <div className="flex items-center gap-3">
               <button type="button" onClick={() => setField("published", !form.published)}
