@@ -248,8 +248,8 @@ function Bell() {
       style={{ transformOrigin: "top center" }}
     >
       <svg
-        width="56"
-        height="72"
+        width="70"
+        height="90"
         viewBox="0 0 56 72"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -287,9 +287,23 @@ function Bell() {
           strokeWidth="2.5"
           fill="none"
         />
+        <text
+          x="28"
+          textAnchor="middle"
+          fill="rgba(255,130,45,0.75)"
+          fontFamily="Georgia, 'Times New Roman', serif"
+          fontSize="7"
+          fontWeight="700"
+          letterSpacing="0.3"
+        >
+          <tspan x="28" y="39">Hells</tspan>
+          <tspan x="28" y="47">Bells</tspan>
+        </text>
         {/* Bell clapper */}
-        <line x1="28" y1="50" x2="28" y2="66" stroke="rgba(255,90,0,0.5)" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx="28" cy="68" r="5" fill="rgba(255,90,0,0.5)" stroke="rgba(255,90,0,0.8)" strokeWidth="1" />
+        <g className="animate-bell-clapper">
+          <line x1="28" y1="50" x2="28" y2="66" stroke="rgba(255,90,0,0.5)" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="28" cy="68" r="5" fill="rgba(255,90,0,0.5)" stroke="rgba(255,90,0,0.8)" strokeWidth="1" />
+        </g>
 
         {/* Sound waves */}
         <path d="M52 34 Q58 44 52 54" stroke="rgba(255,90,0,0.25)" strokeWidth="2" fill="none" strokeLinecap="round" />

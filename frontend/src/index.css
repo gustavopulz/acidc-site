@@ -32,6 +32,18 @@
   35%           { transform: rotate(-3deg);  }
 }
 
+@keyframes bellClapperSwing {
+  0%, 3%, 58%, 100% { transform: rotate(0deg); }
+  5%, 6%            { transform: rotate(-24deg); }
+  14%, 15%          { transform: rotate(24deg); }
+  21%               { transform: rotate(-16deg); }
+  27%               { transform: rotate(10deg); }
+  33%               { transform: rotate(-7deg); }
+  39%               { transform: rotate(5deg); }
+  45%               { transform: rotate(-3deg); }
+  51%               { transform: rotate(1.5deg); }
+}
+
 /* Smoke puff: rises and fades */
 @keyframes smokeDrift {
   0%   { opacity: 0;   transform: translateY(0)    scale(0.4); }
@@ -66,6 +78,12 @@
 .animate-bell {
   transform-origin: top center;
   animation: bellSwing ease-in-out 8s infinite;
+}
+
+.animate-bell-clapper {
+  transform-box: view-box;
+  transform-origin: 28px 50px;
+  animation: bellClapperSwing ease-in-out 8s infinite;
 }
 
 .animate-bell-delay {
