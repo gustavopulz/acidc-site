@@ -11,7 +11,7 @@ services:
       DATABASE_URL: "file:/app/prisma/prod.db"
       JWT_SECRET: "${JWT_SECRET:?JWT_SECRET must be set}"
       ADMIN_EMAIL: "${ADMIN_EMAIL:-admin@acidc.com.br}"
-      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-acidc@admin2024}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:?ADMIN_PASSWORD must be set}"
       FRONTEND_URL: "${FRONTEND_URL:-https://acidc.com.br}"
       NODE_ENV: production
     volumes:
@@ -29,7 +29,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: "${VITE_API_URL:-https://acidc.com.br:3002}"
+        VITE_API_URL: "${VITE_API_URL:-https://acidc.com.br}"
     container_name: acidc-frontend
     restart: unless-stopped
     ports:

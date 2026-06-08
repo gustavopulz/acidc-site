@@ -23,6 +23,7 @@ backend/prisma/prod.db
 backend/public/uploads/
 .env
 .env.local
+.env-production
 
 # Editor directories and files
 .vscode/*
