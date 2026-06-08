@@ -14,7 +14,7 @@ services:
       JWT_SECRET: "${JWT_SECRET}"
       ADMIN_EMAIL: "${ADMIN_EMAIL:-admin@acidc.com.br}"
       ADMIN_PASSWORD: "${ADMIN_PASSWORD:-acidc@admin2024}"
-      FRONTEND_URL: "${FRONTEND_URL:-http://localhost}"
+      FRONTEND_URL: "${FRONTEND_URL:-https://acidc.com.br}"
       NODE_ENV: production
     volumes:
       - backend_db:/app/prisma
@@ -30,7 +30,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: "${VITE_API_URL:-http://localhost:3001}"
+        VITE_API_URL: "${VITE_API_URL:-https://acidc.com.br:3002}"
     container_name: acidc-frontend
     restart: unless-stopped
     ports:

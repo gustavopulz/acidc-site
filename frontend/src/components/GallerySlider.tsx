@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { useAlbums } from "../hooks/useAlbums";
-import { youtubeThumb, youtubeEmbed, getYouTubeId } from "../lib/youtube";
+import { youtubeEmbed, getYouTubeId } from "../lib/youtube";
 import ImageLightbox from "./ImageLightbox";
 
 const BASE = import.meta.env.VITE_API_URL ?? "";
