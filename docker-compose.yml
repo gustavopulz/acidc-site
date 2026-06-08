@@ -9,7 +9,7 @@ services:
       - "3002:3001"
     environment:
       DATABASE_URL: "file:/app/prisma/prod.db"
-      JWT_SECRET: "${JWT_SECRET}"
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET must be set}"
       ADMIN_EMAIL: "${ADMIN_EMAIL:-admin@acidc.com.br}"
       ADMIN_PASSWORD: "${ADMIN_PASSWORD:-acidc@admin2024}"
       FRONTEND_URL: "${FRONTEND_URL:-https://acidc.com.br}"
