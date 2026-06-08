@@ -14,7 +14,7 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl curl
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser  --system --uid 1001 nextjs
