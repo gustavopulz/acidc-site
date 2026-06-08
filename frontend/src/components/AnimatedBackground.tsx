@@ -244,16 +244,16 @@ function SmokePuff({ delay }: { delay: string }) {
 function Bell() {
   return (
     <div
-      className="absolute top-16 right-12 animate-bell pointer-events-none hidden md:block"
-      style={{ transformOrigin: "top center" }}
+      className="absolute top-14 right-0 scale-75 sm:top-16 sm:right-8 sm:scale-90 md:right-12 md:scale-100 pointer-events-none"
     >
-      <svg
-        width="70"
-        height="90"
-        viewBox="0 0 56 72"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <div className="animate-bell" style={{ transformOrigin: "top center" }}>
+        <svg
+          width="70"
+          height="90"
+          viewBox="0 0 56 72"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
         <defs>
           <filter id="bellGlow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
@@ -310,7 +310,8 @@ function Bell() {
         <path d="M56 28 Q66 44 56 60" stroke="rgba(255,90,0,0.15)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <path d="M4 34 Q-2 44 4 54" stroke="rgba(255,90,0,0.25)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <path d="M0 28 Q-10 44 0 60" stroke="rgba(255,90,0,0.15)" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </svg>
+        </svg>
+      </div>
     </div>
   );
 }
