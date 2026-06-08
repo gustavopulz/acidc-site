@@ -20,11 +20,11 @@ services:
       - backend_db:/app/prisma
       - backend_uploads:/app/public/uploads
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/shows"]
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3001/api/shows', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))\""]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 15s
 
   frontend:
     build:
