@@ -20,10 +20,9 @@ RUN adduser  --system --uid 1001 nextjs
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static   ./.next/static
 COPY --from=builder /app/prisma         ./prisma
-COPY --from=builder /app/node_modules/.prisma  ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma  ./node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma   ./node_modules/prisma
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma  ./node_modules/prisma
 
 RUN mkdir -p /app/prisma && chown nextjs:nodejs /app/prisma
 RUN mkdir -p /app/public/uploads && chown nextjs:nodejs /app/public/uploads
@@ -32,4 +31,4 @@ USER nextjs
 EXPOSE 3001
 ENV PORT=3001
 
-CMD ["sh", "-c", "node_modules/.bin/prisma db push && node server.js"]
+CMD ["sh", "-c", "node node_modules/prisma/build/index.js db push && node server.js"]
