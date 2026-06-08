@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String   @default("Admin")
+  createdAt DateTime @default(now())
+}
+
+model Show {
+  id        String   @id @default(cuid())
+  date      String
+  city      String
+  venue     String
+  status    String?
+  link      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Album {
+  id        String   @id @default(cuid())
+  title     String
+  date      String
+  folder    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  photos    Photo[]
+  videos    Video[]
+}
+
+model Photo {
+  id      String  @id @default(cuid())
+  url     String
+  pinned  Boolean @default(false)
+  albumId String
+  album   Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+}
+
+model Video {
+  id      String  @id @default(cuid())
+  src     String
+  title   String?
+  pinned  Boolean @default(false)
+  albumId String
+  album   Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+}
+
+model News {
+  id         String   @id @default(cuid())
+  title      String
+  slug       String   @unique
+  content    String
+  excerpt    String?
+  coverImage String?
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Visit {
+  id        String   @id @default(cuid())
+  page      String
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
