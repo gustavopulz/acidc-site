@@ -33,5 +33,6 @@ RUN mkdir -p /app/prisma /app/public/uploads \
 USER nextjs
 EXPOSE 3001
 ENV PORT=3001
+ENV HOSTNAME=0.0.0.0
 
 CMD ["sh", "-c", "node node_modules/prisma/build/index.js db push && node server.js"]
