@@ -14,6 +14,8 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+RUN apk add --no-cache openssl
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser  --system --uid 1001 nextjs
 
@@ -24,8 +26,9 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma  ./node_modules/prisma
 
-RUN mkdir -p /app/prisma && chown nextjs:nodejs /app/prisma
-RUN mkdir -p /app/public/uploads && chown nextjs:nodejs /app/public/uploads
+RUN mkdir -p /app/prisma /app/public/uploads \
+    && chown -R nextjs:nodejs /app/prisma /app/public/uploads \
+         /app/node_modules/.prisma /app/node_modules/@prisma /app/node_modules/prisma
 
 USER nextjs
 EXPOSE 3001
