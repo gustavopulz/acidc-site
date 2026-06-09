@@ -301,7 +301,7 @@ export default function AdminNews() {
 
       {modal !== null && (
         <Modal title={modal === "new" ? "Nova Notícia" : "Editar Notícia"} onClose={() => setModal(null)} wide>
-          <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+          <div className="space-y-4">
             <Field label="Título" value={form.title}
               onChange={(v) => setField("title", v)} placeholder="AC/DC anuncia turnê no Brasil" />
             <div>

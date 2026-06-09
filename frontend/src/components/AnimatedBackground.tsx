@@ -194,6 +194,14 @@ function WheelGroup({
   const spokes = large ? 8 : 6;
   return (
     <g>
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from={`0 ${cx} ${cy}`}
+        to={`-360 ${cx} ${cy}`}
+        dur={large ? "1.8s" : "1.1s"}
+        repeatCount="indefinite"
+      />
       <circle cx={cx} cy={cy} r={r} fill="rgba(25,8,0,0.95)" stroke="rgba(255,90,0,0.5)" strokeWidth="1.5" />
       <circle cx={cx} cy={cy} r={r * 0.15} fill="rgba(255,90,0,0.6)" />
       {/* Spokes */}
@@ -236,16 +244,16 @@ function SmokePuff({ delay }: { delay: string }) {
 function Bell() {
   return (
     <div
-      className="absolute top-16 right-12 animate-bell pointer-events-none hidden md:block"
-      style={{ transformOrigin: "top center" }}
+      className="absolute top-14 right-0 scale-75 sm:top-16 sm:right-8 sm:scale-90 md:right-12 md:scale-100 pointer-events-none"
     >
-      <svg
-        width="56"
-        height="72"
-        viewBox="0 0 56 72"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <div className="animate-bell" style={{ transformOrigin: "top center" }}>
+        <svg
+          width="70"
+          height="90"
+          viewBox="0 0 56 72"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
         <defs>
           <filter id="bellGlow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
@@ -279,16 +287,31 @@ function Bell() {
           strokeWidth="2.5"
           fill="none"
         />
+        <text
+          x="28"
+          textAnchor="middle"
+          fill="rgba(255,130,45,0.75)"
+          fontFamily="Georgia, 'Times New Roman', serif"
+          fontSize="7"
+          fontWeight="700"
+          letterSpacing="0.3"
+        >
+          <tspan x="28" y="39">Hells</tspan>
+          <tspan x="28" y="47">Bells</tspan>
+        </text>
         {/* Bell clapper */}
-        <line x1="28" y1="50" x2="28" y2="66" stroke="rgba(255,90,0,0.5)" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx="28" cy="68" r="5" fill="rgba(255,90,0,0.5)" stroke="rgba(255,90,0,0.8)" strokeWidth="1" />
+        <g className="animate-bell-clapper">
+          <line x1="28" y1="50" x2="28" y2="66" stroke="rgba(255,90,0,0.5)" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="28" cy="68" r="5" fill="rgba(255,90,0,0.5)" stroke="rgba(255,90,0,0.8)" strokeWidth="1" />
+        </g>
 
         {/* Sound waves */}
         <path d="M52 34 Q58 44 52 54" stroke="rgba(255,90,0,0.25)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <path d="M56 28 Q66 44 56 60" stroke="rgba(255,90,0,0.15)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <path d="M4 34 Q-2 44 4 54" stroke="rgba(255,90,0,0.25)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <path d="M0 28 Q-10 44 0 60" stroke="rgba(255,90,0,0.15)" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </svg>
+        </svg>
+      </div>
     </div>
   );
 }
