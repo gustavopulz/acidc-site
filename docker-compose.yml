@@ -34,16 +34,14 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
 
-      # API
-      - "traefik.http.routers.acidc_api.rule=Host(`${DOMAIN:-acidc.com.br}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.acidc_api.rule=Host(`acidc.com.br`) && PathPrefix(`/api`)"
       - "traefik.http.routers.acidc_api.priority=20"
       - "traefik.http.routers.acidc_api.entrypoints=websecure"
       - "traefik.http.routers.acidc_api.tls=true"
       - "traefik.http.routers.acidc_api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.acidc_api.service=acidc_backend"
 
-      # Arquivos enviados pelo painel
-      - "traefik.http.routers.acidc_uploads.rule=Host(`${DOMAIN:-acidc.com.br}`) && PathPrefix(`/uploads`)"
+      - "traefik.http.routers.acidc_uploads.rule=Host(`acidc.com.br`) && PathPrefix(`/uploads`)"
       - "traefik.http.routers.acidc_uploads.priority=20"
       - "traefik.http.routers.acidc_uploads.entrypoints=websecure"
       - "traefik.http.routers.acidc_uploads.tls=true"
@@ -76,22 +74,21 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
 
-      # Frontend
-      - "traefik.http.routers.acidc.rule=Host(`${DOMAIN:-acidc.com.br}`)"
+      - "traefik.http.routers.acidc.rule=Host(`acidc.com.br`)"
       - "traefik.http.routers.acidc.priority=1"
       - "traefik.http.routers.acidc.entrypoints=websecure"
       - "traefik.http.routers.acidc.tls=true"
       - "traefik.http.routers.acidc.tls.certresolver=letsencrypt"
       - "traefik.http.routers.acidc.service=acidc_frontend"
 
-      # www -> domínio principal
-      - "traefik.http.routers.acidc_www.rule=Host(`www.${DOMAIN:-acidc.com.br}`)"
+      - "traefik.http.routers.acidc_www.rule=Host(`www.acidc.com.br`)"
       - "traefik.http.routers.acidc_www.priority=100"
       - "traefik.http.routers.acidc_www.entrypoints=websecure"
       - "traefik.http.routers.acidc_www.tls=true"
       - "traefik.http.routers.acidc_www.tls.certresolver=letsencrypt"
       - "traefik.http.routers.acidc_www.middlewares=acidc-www-redirect"
       - "traefik.http.routers.acidc_www.service=acidc_frontend"
+
       - "traefik.http.middlewares.acidc-www-redirect.redirectregex.regex=^https?://www\\.(.+)"
       - "traefik.http.middlewares.acidc-www-redirect.redirectregex.replacement=https://$${1}"
       - "traefik.http.middlewares.acidc-www-redirect.redirectregex.permanent=true"
