@@ -104,6 +104,12 @@
   animation: glowOrb ease-in-out 8s infinite;
 }
 
+/***** Select options — fix dark mode visibility *****/
+select option {
+  background-color: #111111;
+  color: #ffffff;
+}
+
 /***** Utilitárias *****/
 .glow {
   box-shadow: 0 0 20px rgba(255, 90, 90, 0.4), 0 0 40px rgba(255, 122, 0, 0.25);

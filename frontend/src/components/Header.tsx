@@ -7,6 +7,7 @@ const links = [
   { to: "/media", label: "Galeria" },
   { to: "/noticias", label: "Notícias" },
   { to: "/sobre", label: "Sobre" },
+  { to: "/orcamento", label: "Orçamento" },
   { to: "/contato", label: "Contato" },
 ];
 

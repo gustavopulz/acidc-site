@@ -22,6 +22,7 @@ import Shows from "./pages/Shows";
 import Media from "./pages/Media";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Quote from "./pages/Quote";
 import NewsPage from "./pages/News";
 import { AdminAuthProvider } from "./admin/context/AuthContext";
 import AdminLayout from "./admin/components/AdminLayout";
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
       { path: "media", element: <Media /> },
       { path: "noticias", element: <NewsPage /> },
       { path: "sobre", element: <About /> },
+      { path: "orcamento", element: <Quote /> },
       { path: "contato", element: <Contact /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
