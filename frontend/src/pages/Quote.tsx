@@ -131,14 +131,10 @@ export default function Quote() {
       {/* Sonorização */}
       <Section>
         <div className="rounded-lg border border-white/10 bg-white/5 p-5 max-w-2xl">
-          <h2 className="font-semibold text-white mb-2">Sonorização</h2>
+          <h2 className="font-semibold text-white mb-2">PA e Bateria</h2>
           <p className="text-white/70 text-sm">
-            Sonorização compacta para eventos em ambientes fechados com até 100 pessoas:{" "}
-            <strong className="text-accent-400 font-semibold">R$ 800 adicionais</strong>.
-          </p>
-          <p className="text-white/50 text-sm mt-2">
-            Para ambientes externos ou eventos com mais de 100 pessoas, a estrutura de
-            som será avaliada separadamente.
+            Caso precise de equipamento de som, incluímos PA e bateria por{" "}
+            <strong className="text-accent-400 font-semibold">R$ 600 adicionais</strong>.
           </p>
         </div>
       </Section>

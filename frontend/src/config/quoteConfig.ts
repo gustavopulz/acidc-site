@@ -13,8 +13,7 @@ export const quoteConfig = {
   safetyMarginPercentage: 10,
   minimumTravelPrice: 150,
   roundingStep: 50,
-  soundFlatPrice: 800,
-  soundMaxPeople: 100,
+  soundFlatPrice: 600,
   // Distância fixa Araras ↔ Limeira (km por estrada — nunca muda)
   fixedArarasLimeiraKm: 23,
   // Pedágios estimados — total para todos os veículos (R$). Ajustar conforme rota.

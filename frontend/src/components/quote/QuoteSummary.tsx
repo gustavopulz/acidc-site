@@ -13,20 +13,7 @@ interface Props {
 
 function getSoundResult(form: QuoteFormData): { price: number | null; note: string | null } {
   if (form.precisaSom !== "sim") return { price: null, note: null };
-
-  const pessoas = parseInt(form.pessoas, 10);
-  const canAutoPrice =
-    form.ambiente === "interno" &&
-    !isNaN(pessoas) &&
-    pessoas > 0 &&
-    pessoas <= quoteConfig.soundMaxPeople;
-
-  if (canAutoPrice) return { price: quoteConfig.soundFlatPrice, note: null };
-
-  return {
-    price: null,
-    note: "A estrutura de som será calculada em um orçamento personalizado.",
-  };
+  return { price: quoteConfig.soundFlatPrice, note: null };
 }
 
 function buildContactUrl(form: QuoteFormData, total: number | null, travelResult: TravelQuoteResult): string {
@@ -88,7 +75,7 @@ export default function QuoteSummary({ form, selectedPackage, travelResult, trav
         {/* Sonorização */}
         {form.precisaSom === "sim" && (
           <div className="flex items-start justify-between gap-4">
-            <dt className="text-white/60 shrink-0">Sonorização</dt>
+            <dt className="text-white/60 shrink-0">PA e Bateria</dt>
             <dd className="text-right">
               {soundPrice !== null ? (
                 <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-ember">
